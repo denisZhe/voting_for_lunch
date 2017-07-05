@@ -12,9 +12,9 @@ public interface VotingService {
 
     Vote get(int id) throws NotFoundException;
 
+    List<Vote> getAll();
+
     List<Vote> getByUserId(int userId);
 
     List<Vote> getByLunchId(int lunchId);
-
-    List<Vote> getAll();
 }

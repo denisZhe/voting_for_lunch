@@ -8,6 +8,7 @@ import my.task.voting.util.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,6 +25,7 @@ public class LunchServiceImpl implements LunchService {
     @Override
     @Transactional
     public Lunch save(Lunch lunch) throws ChangeUnacceptableException {
+        Assert.notNull(lunch, "Lunch must not be null");
         if (lunch.getId() != null && !votesRepository.getByLunchId(lunch.getId()).isEmpty()) {
             throw new ChangeUnacceptableException("For lunch already voted and it can not be changed");
         } else {
@@ -58,11 +60,13 @@ public class LunchServiceImpl implements LunchService {
 
     @Override
     public List<Lunch> getByDate(LocalDate date) {
+        Assert.notNull(date, "Date must not be null");
         return lunchRepository.getByDate(date);
     }
 
     @Override
     public List<Lunch> getByDateWithMeals(LocalDate date) {
+        Assert.notNull(date, "Date must not be null");
         return lunchRepository.getByDateWithMeals(date);
     }
 }

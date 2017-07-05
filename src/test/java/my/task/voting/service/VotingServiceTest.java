@@ -2,6 +2,7 @@ package my.task.voting.service;
 
 import my.task.voting.model.Vote;
 import my.task.voting.util.ChangeUnacceptableException;
+import my.task.voting.util.NotFoundException;
 import my.task.voting.util.RepeatedVoteException;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
@@ -75,6 +76,13 @@ public class VotingServiceTest extends AbstractServiceTest{
     @Test
     public void testGet() throws Exception {
         assertEquals(VOTE_1, votingService.get(VOTE_1.getId()));
+    }
+
+    @Test
+    public void testNotFoundWhenGet() throws Exception {
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("Vote with such id doesn't exist");
+        votingService.get(getNonexistentVoteId());
     }
 
     @Test

@@ -1,18 +1,21 @@
 package my.task.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @NamedQueries({
         @NamedQuery(name = Lunch.ALL_SORTED, query = "SELECT l FROM Lunch l ORDER BY l.created DESC"),
         @NamedQuery(name = Lunch.DELETE, query = "DELETE FROM Lunch l WHERE l.id = :id"),
         @NamedQuery(name = Lunch.GET_BY_DATE,
-                query = "SELECT l FROM Lunch l WHERE l.created BETWEEN :startDate AND :endDate"),
+                query = "SELECT l FROM Lunch l WHERE l.created = :created"),
         @NamedQuery(name = Lunch.GET_BY_DATE_WITH_MEALS,
-                query = "SELECT l FROM Lunch l LEFT JOIN FETCH l.meals WHERE l.created BETWEEN :startDate AND :endDate")
+                query = "SELECT DISTINCT l FROM Lunch l LEFT JOIN FETCH l.meals WHERE l.created = :created")
 })
 @Entity
 @Table(name = "lunches")
@@ -24,33 +27,40 @@ public class Lunch extends BaseEntity {
     public static final String GET_BY_DATE_WITH_MEALS = "Lunch.getByDateWithMeals";
 
     @Column(name = "created")
-    private LocalDateTime created;
+    @NotNull
+    private LocalDate created;
 
     @Column(name = "restaurantName")
     @NotBlank
     private String restaurantName;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lunch", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Meal> meals;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lunch", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Meal> meals;
 
     public Lunch() {
     }
 
     public Lunch(Lunch lunch) {
-        this(lunch.getId(), lunch.getCreated(), lunch.getRestaurantName());
+        this(lunch.getId(), lunch.getCreated(), lunch.getRestaurantName(), lunch.getMeals());
     }
 
-    public Lunch(Integer id, LocalDateTime created, String restaurantName) {
+    public Lunch(Integer id, LocalDate created, String restaurantName) {
+        this(id, created, restaurantName, null);
+    }
+
+    public Lunch(Integer id, LocalDate created, String restaurantName, List<Meal> meals) {
         super(id);
         this.created = created;
         this.restaurantName = restaurantName;
+        this.meals = meals;
     }
 
-    public LocalDateTime getCreated() {
+    public LocalDate getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(LocalDate created) {
         this.created = created;
     }
 
@@ -62,11 +72,11 @@ public class Lunch extends BaseEntity {
         this.restaurantName = restaurantName;
     }
 
-    public Set<Meal> getMeals() {
+    public List<Meal> getMeals() {
         return meals;
     }
 
-    public void setMeals(Set<Meal> meals) {
+    public void setMeals(List<Meal> meals) {
         this.meals = meals;
     }
 

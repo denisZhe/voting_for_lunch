@@ -5,7 +5,9 @@ import my.task.voting.util.ChangeUnacceptableException;
 import my.task.voting.util.NotFoundException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +47,20 @@ public class LunchServiceTest extends AbstractServiceTest{
         thrown.expect(ChangeUnacceptableException.class);
         thrown.expectMessage("For lunch already voted and it can not be changed");
         lunchService.save(getUnacceptableChangeLunch());
+    }
+
+    @Test
+    public void testNotNullWhenSave() throws Exception {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Lunch must not be null");
+        lunchService.save(null);
+    }
+
+    @Test
+    public void testRepeatedWhenSave() throws Exception {
+        thrown.expect(DataIntegrityViolationException.class);
+        lunchService.save(getSimpleLunch());
+        lunchService.save(getSimpleLunch());
     }
 
     @Test
@@ -94,14 +110,14 @@ public class LunchServiceTest extends AbstractServiceTest{
 
     @Test
     public void testGetByDate() throws Exception {
-        List<Lunch> persistedLunches = lunchService.getByDate(LUNCH_2.getCreated().toLocalDate());
+        List<Lunch> persistedLunches = lunchService.getByDate(LUNCH_2.getCreated());
         assertEquals(LUNCH_2, persistedLunches.get(0));
     }
 
     @Test
     public void testByDateWithMeals() {
-        List<Lunch> persistedLunches = lunchService.getByDateWithMeals(LUNCH_2.getCreated().toLocalDate());
+        List<Lunch> persistedLunches = lunchService.getByDateWithMeals(LUNCH_2.getCreated());
         assertEquals(LUNCH_2, persistedLunches.get(0));
-        assertEquals(persistedLunches.get(0).getMeals(), LUNCH_2.getMeals());
+        assertEquals(new ArrayList<>(persistedLunches.get(0).getMeals()), LUNCH_2.getMeals());
     }
 }

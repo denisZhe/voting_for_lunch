@@ -13,20 +13,20 @@ public class UserTestData {
 
     public static final User ADMIN = new User(USER1_ID,
             LocalDateTime.of(2017, 6, 15, 12, 30),
-            Type.ADMIN, "Admin", "admin@gmail.com", "adminpass");
+            Type.ROLE_ADMIN, "Admin", "admin@gmail.com", "adminpass");
 
     public static final User USER_1 = new User(USER1_ID +1,
             LocalDateTime.of(2017, 6, 16, 12, 30),
-            Type.USER, "User", "user@gmail.com", "password");
+            Type.ROLE_USER, "User", "user@gmail.com", "password");
 
     public static final User USER_2 = new User(USER1_ID +2,
             LocalDateTime.of(2017, 6, 17, 12, 30),
-            Type.USER, "User2", "user2@gmail.com", "password2");
+            Type.ROLE_USER, "User2", "user2@gmail.com", "password2");
 
     public static User getNewUser() {
         return new User(null,
                 LocalDateTime.of(2017, 6, 25, 12, 30),
-                Type.USER, "newUser", "newuser@gmail.com", "newpassword") ;
+                Type.ROLE_USER, "newUser", "newuser@gmail.com", "newpassword") ;
     }
 
     public static User getUpdatedUser() {

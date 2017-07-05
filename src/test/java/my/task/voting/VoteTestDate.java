@@ -27,4 +27,8 @@ public class VoteTestDate {
     public static Vote getRepeatedVote() {
         return new Vote(null,  LocalDate.now(), USER_1.getId(), LUNCH_2.getId());
     }
+
+    public static int getNonexistentVoteId() {
+        return 123;
+    }
 }

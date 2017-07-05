@@ -83,4 +83,9 @@ public class UserServiceTest extends AbstractServiceTest{
         List<User> persistedUsers = userService.getAll();
         assertEquals(expectedUsers, persistedUsers);
     }
+
+    @Test
+    public void testGetByEmail() throws Exception {
+        assertEquals(USER_2, userService.getByEmail(USER_2.getEmail()));
+    }
 }

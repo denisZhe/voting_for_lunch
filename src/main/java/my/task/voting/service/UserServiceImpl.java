@@ -6,13 +6,17 @@ import my.task.voting.repository.VotesRepository;
 import my.task.voting.util.ChangeUnacceptableException;
 import my.task.voting.util.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
-@Service
-public class UserServiceImpl implements UserService {
+@Service("userService")
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -48,5 +52,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll() {
         return userRepository.getAll();
+    }
+
+    @Override
+    public User getByEmail(String email) throws NotFoundException {
+        Assert.notNull(email, "Email must not be null");
+        User user = userRepository.getByEmail(email);
+        if (user == null) {
+            throw new NotFoundException("The user with such email doesn't exist");
+        }
+        return user;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.getByEmail(email.toLowerCase());
+        if (user == null) {
+            throw new UsernameNotFoundException("The user with such email doesn't exist");
+        }
+        return user;
     }
 }

@@ -1,19 +1,22 @@
 package my.task.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "meals")
 public class Meal extends BaseEntity {
 
     @Column(name = "created")
-    private LocalDateTime created;
+    @NotNull
+    private LocalDate created;
 
     @Column(name = "dishName")
     @NotBlank
@@ -21,18 +24,19 @@ public class Meal extends BaseEntity {
 
     @Column(name = "price")
     @NotNull
-    private int price;
+    private Integer price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lunchId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
+    @JsonBackReference
     private Lunch lunch;
 
     public Meal() {
     }
 
-    public Meal(Integer id, LocalDateTime created, String dishName, int price, Lunch lunch) {
+    public Meal(Integer id, LocalDate created, String dishName, Integer price, Lunch lunch) {
         super(id);
         this.created = created;
         this.dishName = dishName;
@@ -40,11 +44,11 @@ public class Meal extends BaseEntity {
         this.lunch = lunch;
     }
 
-    public LocalDateTime getCreated() {
+    public LocalDate getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(LocalDate created) {
         this.created = created;
     }
 
@@ -56,11 +60,11 @@ public class Meal extends BaseEntity {
         this.dishName = dishName;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -80,7 +84,7 @@ public class Meal extends BaseEntity {
 
         Meal meal = (Meal) o;
 
-        if (getPrice() != meal.getPrice()) return false;
+        if (!Objects.equals(getPrice(), meal.getPrice())) return false;
         if (!getCreated().equals(meal.getCreated())) return false;
         if (!getDishName().equals(meal.getDishName())) return false;
         return getLunch().equals(meal.getLunch());

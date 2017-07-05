@@ -46,9 +46,14 @@ public class VotingServiceImpl implements VotingService {
     public Vote get(int id) throws NotFoundException {
         Vote vote = votesRepository.get(id);
         if (vote == null) {
-            throw new NotFoundException("Vote with such Id doesn't exist");
+            throw new NotFoundException("Vote with such id doesn't exist");
         }
         return vote;
+    }
+
+    @Override
+    public List<Vote> getAll() {
+        return votesRepository.getAll();
     }
 
     @Override
@@ -59,10 +64,5 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public List<Vote> getByLunchId(int lunchId) {
         return votesRepository.getByLunchId(lunchId);
-    }
-
-    @Override
-    public List<Vote> getAll() {
-        return votesRepository.getAll();
     }
 }

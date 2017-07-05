@@ -1,6 +1,7 @@
 package my.task.voting.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @NamedQueries({
@@ -19,12 +20,16 @@ public class Vote extends BaseEntity {
     public static final String DELETE = "Vote.delete";
 
     @Column(name = "votingDate")
-    private LocalDate votingDate;
+    @NotNull
+    private LocalDate votingDate = LocalDate.now();
 
+//    https://stackoverflow.com/a/6312018
     @Column(name = "userId")
+    @NotNull
     private Integer userId;
 
     @Column(name = "lunchId")
+    @NotNull
     private Integer lunchId;
 
     public Vote() {

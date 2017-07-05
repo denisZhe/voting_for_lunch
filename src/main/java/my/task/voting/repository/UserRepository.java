@@ -16,4 +16,7 @@ public interface UserRepository {
 
     // returns the users list ordered by registered date desc
     List<User> getAll();
+
+    // returns null if user does not exist
+    User getByEmail(String email);
 }

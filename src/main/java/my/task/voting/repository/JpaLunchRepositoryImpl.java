@@ -7,8 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -51,16 +49,14 @@ public class JpaLunchRepositoryImpl implements LunchRepository {
     @Override
     public List<Lunch> getByDate(LocalDate date) {
         return em.createNamedQuery(Lunch.GET_BY_DATE, Lunch.class)
-                .setParameter("startDate", LocalDateTime.of(date, LocalTime.MIN))
-                .setParameter("endDate", LocalDateTime.of(date, LocalTime.MAX))
+                .setParameter("created", date)
                 .getResultList();
     }
 
     @Override
     public List<Lunch> getByDateWithMeals(LocalDate date) {
         return em.createNamedQuery(Lunch.GET_BY_DATE_WITH_MEALS, Lunch.class)
-                .setParameter("startDate", LocalDateTime.of(date, LocalTime.MIN))
-                .setParameter("endDate", LocalDateTime.of(date, LocalTime.MAX))
+                .setParameter("created", date)
                 .getResultList();
     }
 }
