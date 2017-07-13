@@ -23,7 +23,7 @@ public class Vote extends BaseEntity {
     @NotNull
     private LocalDate votingDate = LocalDate.now();
 
-//    https://stackoverflow.com/a/6312018
+    //    https://stackoverflow.com/a/6312018
     @Column(name = "userId")
     @NotNull
     private Integer userId;
@@ -74,17 +74,18 @@ public class Vote extends BaseEntity {
 
         Vote vote = (Vote) o;
 
-        if (!getVotingDate().equals(vote.getVotingDate())) return false;
-        if (!getUserId().equals(vote.getUserId())) return false;
-        return getLunchId().equals(vote.getLunchId());
+        if (getVotingDate() != null ? !getVotingDate().equals(vote.getVotingDate()) : vote.getVotingDate() != null)
+            return false;
+        if (getUserId() != null ? !getUserId().equals(vote.getUserId()) : vote.getUserId() != null) return false;
+        return getLunchId() != null ? getLunchId().equals(vote.getLunchId()) : vote.getLunchId() == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + getVotingDate().hashCode();
-        result = 31 * result + getUserId().hashCode();
-        result = 31 * result + getLunchId().hashCode();
+        result = 31 * result + (getVotingDate() != null ? getVotingDate().hashCode() : 0);
+        result = 31 * result + (getUserId() != null ? getUserId().hashCode() : 0);
+        result = 31 * result + (getLunchId() != null ? getLunchId().hashCode() : 0);
         return result;
     }
 

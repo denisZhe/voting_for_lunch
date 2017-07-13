@@ -1,10 +1,10 @@
 package my.task.voting.util;
 
-import my.task.voting.model.*;
+import my.task.voting.model.BaseEntity;
+import my.task.voting.model.User;
+import my.task.voting.model.Vote;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class ValidationUtil {
     public static void checkNew(BaseEntity entity) {
@@ -13,8 +13,8 @@ public class ValidationUtil {
         }
     }
 
+    //      http://stackoverflow.com/a/32728226/548473
     public static void checkIdConsistent(BaseEntity entity, int id) {
-//      http://stackoverflow.com/a/32728226/548473
         if (entity.isNew()) {
             entity.setId(id);
         } else if (entity.getId() != id) {
@@ -22,16 +22,20 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkRepeatedMeal(Lunch lunch) {
-        Set<Meal> mealSet = new HashSet<>(lunch.getMeals());
-        if (mealSet.size() != lunch.getMeals().size()) {
-            throw new IllegalArgumentException("Meals in the lunch must be unique");
+    public static void checkUserPermissionForCreateOrUpdateVote(Vote vote, User user) {
+        if (!Objects.equals(vote.getUserId(), user.getId())) {
+            throw new IllegalArgumentException("The specified user id=" + vote.getUserId() + " does not match yours");
         }
     }
 
-    public static void checkUserPermissionForCreateOrUpdateVote(Vote vote, User user) {
-        if (!Objects.equals(vote.getUserId(), user.getId())) {
-            throw new NotFoundException("Vote with such id doesn't exist for this user");
+    //    http://stackoverflow.com/a/28565320/548473
+    public static Throwable getRootCause(Throwable t) {
+        Throwable result = t;
+        Throwable cause;
+
+        while (null != (cause = result.getCause()) && (result != cause)) {
+            result = cause;
         }
+        return result;
     }
 }

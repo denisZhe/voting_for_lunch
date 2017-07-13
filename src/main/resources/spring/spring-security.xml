@@ -9,12 +9,14 @@
     <http pattern="/rest/**" use-expressions="true" name="restSecurityFilterChain" create-session="stateless">
         <http-basic/>
         <intercept-url pattern="/rest/lunches/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url method="GET" pattern="/rest/votes/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url method="POST" pattern="/rest/votes/" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')"/>
+        <intercept-url method="PUT" pattern="/rest/votes/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')"/>
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <csrf disabled="true"/>
     </http>
 
     <authentication-manager>
-        <authentication-provider user-service-ref="userService">
-        </authentication-provider>
+        <authentication-provider user-service-ref="userService"/>
     </authentication-manager>
 </beans:beans>

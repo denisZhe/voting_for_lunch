@@ -7,13 +7,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @NamedQueries({
         @NamedQuery(name = Lunch.ALL_SORTED, query = "SELECT l FROM Lunch l ORDER BY l.created DESC"),
         @NamedQuery(name = Lunch.DELETE, query = "DELETE FROM Lunch l WHERE l.id = :id"),
-        @NamedQuery(name = Lunch.GET_BY_DATE,
-                query = "SELECT l FROM Lunch l WHERE l.created = :created"),
+        @NamedQuery(name = Lunch.GET_BY_DATE, query = "SELECT l FROM Lunch l WHERE l.created = :created"),
         @NamedQuery(name = Lunch.GET_BY_DATE_WITH_MEALS,
                 query = "SELECT DISTINCT l FROM Lunch l LEFT JOIN FETCH l.meals WHERE l.created = :created")
 })

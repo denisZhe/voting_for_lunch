@@ -1,6 +1,6 @@
 package my.task.voting.to;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -8,7 +8,7 @@ public class MealTO {
 
     private Integer id;
 
-    @NotEmpty
+    @NotBlank
     private String dishName;
 
     @NotNull
@@ -48,12 +48,12 @@ public class MealTO {
 
         MealTO mealTO = (MealTO) o;
 
-        return getDishName().equals(mealTO.getDishName());
+        return getDishName() != null ? getDishName().equals(mealTO.getDishName()) : mealTO.getDishName() == null;
     }
 
     @Override
     public int hashCode() {
-        return getDishName().hashCode();
+        return getDishName() != null ? getDishName().hashCode() : 0;
     }
 
     @Override

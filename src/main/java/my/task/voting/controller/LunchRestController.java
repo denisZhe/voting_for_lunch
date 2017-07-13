@@ -23,7 +23,7 @@ import static my.task.voting.util.ValidationUtil.checkIdConsistent;
 import static my.task.voting.util.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(REST_URL)
+@RequestMapping(value = REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class LunchRestController {
 
     public static final String REST_URL = "/rest/lunches";
@@ -65,25 +65,25 @@ public class LunchRestController {
         service.delete(id);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public Lunch get(@PathVariable("id") int id) {
         log.info("get {}", id);
         return service.get(id);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public List<Lunch> getAll() {
         log.info("get all");
         return service.getAll();
     }
 
-    @GetMapping(value = "/by-date", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/by-date")
     public List<Lunch> getByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get by date {}", date);
         return service.getByDate(date);
     }
 
-    @GetMapping(value = "/detailed-by-date", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/detailed-by-date")
     public List<Lunch> getByDateWithMeals(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get by date with meals {}", date);
         return service.getByDateWithMeals(date);

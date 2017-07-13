@@ -1,8 +1,8 @@
 package my.task.voting.service;
 
 import my.task.voting.model.Lunch;
-import my.task.voting.util.ChangeUnacceptableException;
-import my.task.voting.util.NotFoundException;
+import my.task.voting.util.exception.ChangeUnacceptableException;
+import my.task.voting.util.exception.NotFoundException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import static my.task.voting.LunchTestData.*;
 import static org.junit.Assert.assertEquals;
 
-public class LunchServiceTest extends AbstractServiceTest{
+public class LunchServiceTest extends AbstractServiceTest {
 
     @Autowired
     private LunchService lunchService;
@@ -32,18 +32,17 @@ public class LunchServiceTest extends AbstractServiceTest{
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws Exception {
         Lunch updatedLunch = lunchService.save(getUpdatedLunch());
         List<Lunch> expectedLunches = Stream.of(LUNCH_2, LUNCH_3, updatedLunch)
                 .sorted(Comparator.comparing(Lunch::getCreated).reversed())
                 .collect(Collectors.toList());
         List<Lunch> persistedLunches = lunchService.getAll();
-
         assertEquals(expectedLunches, persistedLunches);
     }
 
     @Test
-    public void testUnacceptableChangeWhenUpdate() {
+    public void testUnacceptableChangeWhenUpdate() throws Exception {
         thrown.expect(ChangeUnacceptableException.class);
         thrown.expectMessage("For lunch already voted and it can not be changed");
         lunchService.save(getUnacceptableChangeLunch());
@@ -74,14 +73,14 @@ public class LunchServiceTest extends AbstractServiceTest{
     }
 
     @Test
-    public void testUnacceptableChangeWhenDelete() {
+    public void testUnacceptableChangeWhenDelete() throws Exception {
         thrown.expect(ChangeUnacceptableException.class);
         thrown.expectMessage("For lunch already voted and it can not be deleted");
         lunchService.delete(LUNCH_2.getId());
     }
 
     @Test
-    public void testNotFoundWhenDelete() {
+    public void testNotFoundWhenDelete() throws Exception {
         thrown.expect(NotFoundException.class);
         thrown.expectMessage("The lunch with such id doesn't exist");
         lunchService.delete(getNonexistentLunchId());
@@ -115,9 +114,16 @@ public class LunchServiceTest extends AbstractServiceTest{
     }
 
     @Test
-    public void testByDateWithMeals() {
+    public void testByDateWithMeals() throws Exception {
         List<Lunch> persistedLunches = lunchService.getByDateWithMeals(LUNCH_2.getCreated());
         assertEquals(LUNCH_2, persistedLunches.get(0));
         assertEquals(new ArrayList<>(persistedLunches.get(0).getMeals()), LUNCH_2.getMeals());
+    }
+
+    @Test
+    public void testGetByNullDate() throws Exception {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Date must not be null");
+        lunchService.getByDate(null);
     }
 }

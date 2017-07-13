@@ -12,6 +12,7 @@
     </appender>
 
     <!--<logger name="org.springframework.jdbc" level="debug"/>-->
+    <!--<logger name="org.hibernate.stat" level="debug"/>-->
     <logger name="my.task.voting" level="debug"/>
 
     <root level="WARN">

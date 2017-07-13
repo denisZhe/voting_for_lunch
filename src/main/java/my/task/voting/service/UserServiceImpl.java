@@ -3,8 +3,8 @@ package my.task.voting.service;
 import my.task.voting.model.User;
 import my.task.voting.repository.UserRepository;
 import my.task.voting.repository.VotesRepository;
-import my.task.voting.util.ChangeUnacceptableException;
-import my.task.voting.util.NotFoundException;
+import my.task.voting.util.exception.ChangeUnacceptableException;
+import my.task.voting.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User save(User user) {
+        Assert.notNull(user, "User must not be null");
         return userRepository.save(user);
     }
 
@@ -66,6 +67,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Assert.notNull(email, "Email must not be null");
         User user = userRepository.getByEmail(email.toLowerCase());
         if (user == null) {
             throw new UsernameNotFoundException("The user with such email doesn't exist");

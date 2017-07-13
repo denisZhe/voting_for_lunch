@@ -1,8 +1,8 @@
 package my.task.voting.service;
 
 import my.task.voting.model.User;
-import my.task.voting.util.ChangeUnacceptableException;
-import my.task.voting.util.NotFoundException;
+import my.task.voting.util.exception.ChangeUnacceptableException;
+import my.task.voting.util.exception.NotFoundException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,6 +37,13 @@ public class UserServiceTest extends AbstractServiceTest{
                 .collect(Collectors.toList());
         List<User> persistedUsers = userService.getAll();
         assertEquals(expectedUsers, persistedUsers);
+    }
+
+    @Test
+    public void testNotNullWhenSave() throws Exception {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("User must not be null");
+        userService.save(null);
     }
 
     @Test

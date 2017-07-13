@@ -8,7 +8,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Entity
 @Table(name = "meals")
@@ -84,19 +83,20 @@ public class Meal extends BaseEntity {
 
         Meal meal = (Meal) o;
 
-        if (!Objects.equals(getPrice(), meal.getPrice())) return false;
-        if (!getCreated().equals(meal.getCreated())) return false;
-        if (!getDishName().equals(meal.getDishName())) return false;
-        return getLunch().equals(meal.getLunch());
+        if (getCreated() != null ? !getCreated().equals(meal.getCreated()) : meal.getCreated() != null) return false;
+        if (getDishName() != null ? !getDishName().equals(meal.getDishName()) : meal.getDishName() != null)
+            return false;
+        if (getPrice() != null ? !getPrice().equals(meal.getPrice()) : meal.getPrice() != null) return false;
+        return getLunch() != null ? getLunch().equals(meal.getLunch()) : meal.getLunch() == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + getCreated().hashCode();
-        result = 31 * result + getDishName().hashCode();
-        result = 31 * result + getPrice();
-        result = 31 * result + getLunch().hashCode();
+        result = 31 * result + (getCreated() != null ? getCreated().hashCode() : 0);
+        result = 31 * result + (getDishName() != null ? getDishName().hashCode() : 0);
+        result = 31 * result + (getPrice() != null ? getPrice().hashCode() : 0);
+        result = 31 * result + (getLunch() != null ? getLunch().hashCode() : 0);
         return result;
     }
 

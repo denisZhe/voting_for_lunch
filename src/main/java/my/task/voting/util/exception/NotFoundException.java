@@ -1,4 +1,4 @@
-package my.task.voting.util;
+package my.task.voting.util.exception;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

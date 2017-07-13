@@ -1,13 +1,13 @@
 package my.task.voting.service;
 
 import my.task.voting.model.Vote;
-import my.task.voting.util.ChangeUnacceptableException;
-import my.task.voting.util.NotFoundException;
-import my.task.voting.util.RepeatedVoteException;
+import my.task.voting.util.exception.ChangeUnacceptableException;
+import my.task.voting.util.exception.NotFoundException;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -60,15 +60,21 @@ public class VotingServiceTest extends AbstractServiceTest{
 
     @Test
     public void testUnacceptableChangeWhenUpdateYesterdayVote() {
-        thrown.expect(ChangeUnacceptableException.class);
-        thrown.expectMessage("Too late for change vote");
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Creating or updating of vote is only allowed for today");
         votingService.save(getYesterdayVote());
     }
 
     @Test
+    public void testNotNullWhenSave() throws Exception {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Vote must not be null");
+        votingService.save(null);
+    }
+
+    @Test
     public void testRepeatedExceptionWhenSave() throws Exception {
-        thrown.expect(RepeatedVoteException.class);
-        thrown.expectMessage("Only one vote per day for the user is possible");
+        thrown.expect(DataIntegrityViolationException.class);
         votingService.save(getNewVote());
         votingService.save(getRepeatedVote());
     }
@@ -86,6 +92,14 @@ public class VotingServiceTest extends AbstractServiceTest{
     }
 
     @Test
+    public void testGetAll() throws Exception {
+        List<Vote> expectedVotes = Stream.of(VOTE_1, VOTE_2)
+                .sorted(Comparator.comparing(Vote::getVotingDate).reversed())
+                .collect(Collectors.toList());
+        assertEquals(expectedVotes, votingService.getAll());
+    }
+
+    @Test
     public void testGetByUserId() throws Exception {
         assertEquals(Arrays.asList(VOTE_1, VOTE_2), votingService.getByUserId(USER_2.getId()));
     }
@@ -93,14 +107,6 @@ public class VotingServiceTest extends AbstractServiceTest{
     @Test
     public void testGetByLunchId() throws Exception {
         assertEquals(Collections.singletonList(VOTE_1), votingService.getByLunchId(LUNCH_2.getId()));
-    }
-
-    @Test
-    public void testGetAll() throws Exception {
-        List<Vote> expectedVotes = Stream.of(VOTE_1, VOTE_2)
-                .sorted(Comparator.comparing(Vote::getVotingDate).reversed())
-                .collect(Collectors.toList());
-        assertEquals(expectedVotes, votingService.getAll());
     }
 
     private void setDeadline(LocalTime newDeadline) throws Exception {
