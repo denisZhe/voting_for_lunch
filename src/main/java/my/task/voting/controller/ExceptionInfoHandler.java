@@ -14,7 +14,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.ChangedCharSetException;
 
 @ControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
@@ -32,7 +31,7 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(ChangedCharSetException.class)
+    @ExceptionHandler(ChangeUnacceptableException.class)
     @ResponseBody
     public ErrorInfo handleError(HttpServletRequest req, ChangeUnacceptableException e) {
         return logAndGetErrorInfo(req, e, false);

@@ -7,8 +7,7 @@ import java.time.LocalDate;
 @NamedQueries({
         @NamedQuery(name = Vote.ALL_SORTED, query = "SELECT v FROM Vote v ORDER BY v.votingDate DESC"),
         @NamedQuery(name = Vote.ALL_BY_USER, query = "SELECT v FROM Vote v WHERE v.userId = :userId"),
-        @NamedQuery(name = Vote.ALL_BY_LUNCH, query = "SELECT v FROM Vote v WHERE v.lunchId = :lunchId"),
-        @NamedQuery(name = Vote.DELETE, query = "DELETE FROM Vote v WHERE v.id = :id")
+        @NamedQuery(name = Vote.ALL_BY_LUNCH, query = "SELECT v FROM Vote v WHERE v.lunchId = :lunchId")
 })
 @Entity
 @Table(name = "votes")
@@ -17,7 +16,6 @@ public class Vote extends BaseEntity {
     public static final String ALL_SORTED = "Vote.getAll";
     public static final String ALL_BY_USER = "Vote.getByUserId";
     public static final String ALL_BY_LUNCH = "Vote.getByLunchId";
-    public static final String DELETE = "Vote.delete";
 
     @Column(name = "votingDate")
     @NotNull

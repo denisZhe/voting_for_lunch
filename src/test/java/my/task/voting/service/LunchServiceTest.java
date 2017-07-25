@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static my.task.voting.LunchTestData.*;
 import static org.junit.Assert.assertEquals;
@@ -24,27 +21,20 @@ public class LunchServiceTest extends AbstractServiceTest {
     @Test
     public void testSave() throws Exception {
         Lunch newLunch = lunchService.save(getNewLunch());
-        List<Lunch> expectedLunches = Stream.of(LUNCH_1, LUNCH_2, LUNCH_3, newLunch)
-                .sorted(Comparator.comparing(Lunch::getCreated).reversed())
-                .collect(Collectors.toList());
-        List<Lunch> persistedLunches = lunchService.getAll();
-        assertEquals(expectedLunches, persistedLunches);
+        assertEquals(getExpectedListLunches(LUNCH_1, LUNCH_2, LUNCH_3, newLunch), lunchService.getAll());
     }
 
     @Test
     public void testUpdate() throws Exception {
         Lunch updatedLunch = lunchService.save(getUpdatedLunch());
-        List<Lunch> expectedLunches = Stream.of(LUNCH_2, LUNCH_3, updatedLunch)
-                .sorted(Comparator.comparing(Lunch::getCreated).reversed())
-                .collect(Collectors.toList());
-        List<Lunch> persistedLunches = lunchService.getAll();
-        assertEquals(expectedLunches, persistedLunches);
+        assertEquals(getExpectedListLunches(LUNCH_2, LUNCH_3, updatedLunch), lunchService.getAll());
     }
 
     @Test
     public void testUnacceptableChangeWhenUpdate() throws Exception {
         thrown.expect(ChangeUnacceptableException.class);
         thrown.expectMessage("For lunch already voted and it can not be changed");
+
         lunchService.save(getUnacceptableChangeLunch());
     }
 
@@ -52,30 +42,29 @@ public class LunchServiceTest extends AbstractServiceTest {
     public void testNotNullWhenSave() throws Exception {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Lunch must not be null");
+
         lunchService.save(null);
     }
 
     @Test
     public void testRepeatedWhenSave() throws Exception {
         thrown.expect(DataIntegrityViolationException.class);
-        lunchService.save(getSimpleLunch());
-        lunchService.save(getSimpleLunch());
+
+        lunchService.save(getNewLunch());
+        lunchService.save(getNewLunch());
     }
 
     @Test
     public void testDelete() throws Exception {
         lunchService.delete(LUNCH_1.getId());
-        List<Lunch> expectedLunches = Stream.of(LUNCH_2, LUNCH_3)
-                .sorted(Comparator.comparing(Lunch::getCreated).reversed())
-                .collect(Collectors.toList());
-        List<Lunch> persistedLunches = lunchService.getAll();
-        assertEquals(expectedLunches, persistedLunches);
+        assertEquals(getExpectedListLunches(LUNCH_2, LUNCH_3), lunchService.getAll());
     }
 
     @Test
     public void testUnacceptableChangeWhenDelete() throws Exception {
         thrown.expect(ChangeUnacceptableException.class);
         thrown.expectMessage("For lunch already voted and it can not be deleted");
+
         lunchService.delete(LUNCH_2.getId());
     }
 
@@ -83,6 +72,7 @@ public class LunchServiceTest extends AbstractServiceTest {
     public void testNotFoundWhenDelete() throws Exception {
         thrown.expect(NotFoundException.class);
         thrown.expectMessage("The lunch with such id doesn't exist");
+
         lunchService.delete(getNonexistentLunchId());
     }
 
@@ -95,22 +85,18 @@ public class LunchServiceTest extends AbstractServiceTest {
     public void testNotFoundWhenGet() throws Exception {
         thrown.expect(NotFoundException.class);
         thrown.expectMessage("The lunch with such id doesn't exist");
+
         lunchService.get(getNonexistentLunchId());
     }
 
     @Test
     public void testGetAll() throws Exception {
-        List<Lunch> expectedLunches = Stream.of(LUNCH_1, LUNCH_2, LUNCH_3)
-                .sorted(Comparator.comparing(Lunch::getCreated).reversed())
-                .collect(Collectors.toList());
-        List<Lunch> persistedLunches = lunchService.getAll();
-        assertEquals(expectedLunches, persistedLunches);
+        assertEquals(getExpectedListLunches(LUNCH_1, LUNCH_2, LUNCH_3), lunchService.getAll());
     }
 
     @Test
     public void testGetByDate() throws Exception {
-        List<Lunch> persistedLunches = lunchService.getByDate(LUNCH_2.getCreated());
-        assertEquals(LUNCH_2, persistedLunches.get(0));
+        assertEquals(LUNCH_2, lunchService.getByDate(LUNCH_2.getCreated()).get(0));
     }
 
     @Test
@@ -124,6 +110,7 @@ public class LunchServiceTest extends AbstractServiceTest {
     public void testGetByNullDate() throws Exception {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Date must not be null");
+
         lunchService.getByDate(null);
     }
 }

@@ -30,7 +30,7 @@ public class VotingServiceImpl implements VotingService {
     public Vote save(Vote vote) throws ChangeUnacceptableException {
         Assert.notNull(vote, "Vote must not be null");
         if (!vote.getVotingDate().isEqual(LocalDate.now())) {
-            throw new IllegalArgumentException("Creating or updating of vote is only allowed for today");
+            throw new ChangeUnacceptableException("Creating or updating of vote is only allowed for today");
         }
         if (!vote.isNew() && votesRepository.get(vote.getId()) != null && (LocalTime.now().isAfter(DEADLINE))) {
             throw new ChangeUnacceptableException("Too late for change vote");

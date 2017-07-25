@@ -36,14 +36,6 @@ public class UserTestData {
         return updatedUser;
     }
 
-    public static User getVotedUser() {
-        return new User(USER_2);
-    }
-
-    public static User getNotVotedUser() {
-        return USER_1;
-    }
-
     public static int getNonexistentUserId() {
         return 123;
     }

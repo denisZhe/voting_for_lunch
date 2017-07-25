@@ -10,7 +10,7 @@ INSERT INTO users (registered, type, name, email, password) VALUES ('2017-06-17 
 
 INSERT INTO lunches (created, restaurantName) VALUES ('2017-06-19', 'restaurant1');
 INSERT INTO lunches (created, restaurantName) VALUES ('2017-06-20', 'restaurant2');
-INSERT INTO lunches (created, restaurantName) VALUES ('2017-06-21', 'restaurant3');
+INSERT INTO lunches (created, restaurantName) VALUES (now, 'restaurant3');
 
 INSERT INTO meals (created, dishName, price, lunchId) VALUES
   ('2017-06-19', 'dish1', 100, 100003),
@@ -18,8 +18,8 @@ INSERT INTO meals (created, dishName, price, lunchId) VALUES
   ('2017-06-20', 'dish3', 100, 100004),
   ('2017-06-20', 'dish4', 50, 100004),
   ('2017-06-20', 'dish5', 150, 100004),
-  ('2017-06-21', 'dish6', 155, 100005),
-  ('2017-06-21', 'dish7', 155, 100005);
+  (now, 'dish6', 155, 100005),
+  (now, 'dish7', 155, 100005);
 
 INSERT INTO VOTES (votingDate, userId, lunchId) VALUES ('2017-06-20', 100002, 100004);
-INSERT INTO VOTES (votingDate, userId, lunchId) VALUES ('2017-06-21', 100002, 100005);
+INSERT INTO VOTES (votingDate, userId, lunchId) VALUES (now, 100002, 100005);

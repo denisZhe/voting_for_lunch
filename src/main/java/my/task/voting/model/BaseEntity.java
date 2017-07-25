@@ -19,7 +19,7 @@ public class BaseEntity {
     public BaseEntity() {
     }
 
-    public BaseEntity(Integer id) {
+    BaseEntity(Integer id) {
         this.id = id;
     }
 

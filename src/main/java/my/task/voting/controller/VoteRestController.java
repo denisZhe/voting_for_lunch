@@ -25,7 +25,7 @@ import static my.task.voting.util.ValidationUtil.checkUserPermissionForCreateOrU
 @RequestMapping(REST_URL)
 public class VoteRestController {
 
-    public static final String REST_URL = "/rest/votes";
+    static final String REST_URL = "/rest/votes";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 

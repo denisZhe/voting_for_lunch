@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static my.task.voting.controller.LunchRestController.REST_URL;
-import static my.task.voting.util.LunchUtil.createNewLunchFromTO;
+import static my.task.voting.util.LunchUtil.createLunchFromTO;
 import static my.task.voting.util.ValidationUtil.checkIdConsistent;
 import static my.task.voting.util.ValidationUtil.checkNew;
 
@@ -26,7 +26,7 @@ import static my.task.voting.util.ValidationUtil.checkNew;
 @RequestMapping(value = REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class LunchRestController {
 
-    public static final String REST_URL = "/rest/lunches";
+    static final String REST_URL = "/rest/lunches";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -39,7 +39,7 @@ public class LunchRestController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Lunch> createWithLocation(@Valid @RequestBody LunchTO lunchTO) {
-        Lunch lunch = createNewLunchFromTO(lunchTO);
+        Lunch lunch = createLunchFromTO(lunchTO);
         log.info("create {}", lunch);
         checkNew(lunch);
         Lunch created = service.save(lunch);
@@ -53,7 +53,7 @@ public class LunchRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void update(@Valid @RequestBody LunchTO lunchTO, @PathVariable("id") int id) {
-        Lunch lunch = createNewLunchFromTO(lunchTO);
+        Lunch lunch = createLunchFromTO(lunchTO);
         log.info("update {}", lunch);
         checkIdConsistent(lunch, id);
         service.save(lunch);
