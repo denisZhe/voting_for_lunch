@@ -16,6 +16,12 @@ Voting system for deciding where to have lunch.
 - **[Lunches](./LunchesDoc.md)**
 - **[Votes](./VotesDoc.md)**
 
+
+- Test database is HSQLDB
+- Settings specified in hsqldb.properties
+- Run InitDB_hsql.sql to init tables
+- Run populateDB.sql to populate tables with test data
+
 # Questions and possible improvements and additions
 - Requires the development of logic related to the ability to delete lunches, users and voices, adding an "activity" field for entries
 - Implement a restaurant in the form of a full-fledged entity that can have a lot of data (name, contacts, work schedule, photos, etc.)
