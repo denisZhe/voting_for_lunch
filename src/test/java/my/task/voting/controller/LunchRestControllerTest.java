@@ -17,7 +17,7 @@ import static my.task.voting.LunchTestData.*;
 import static my.task.voting.TestUtil.userHttpBasic;
 import static my.task.voting.UserTestData.ADMIN;
 import static my.task.voting.UserTestData.USER_1;
-import static my.task.voting.util.LunchUtil.createTOFromLunch;
+import static my.task.voting.util.LunchUtil.createTOFromLunchWithMeals;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -34,7 +34,7 @@ public class LunchRestControllerTest extends AbstractControllerTest {
     @Test
     public void testCreate() throws Exception {
         Lunch newLunch = getNewLunch();
-        LunchTO lunchTO = createTOFromLunch(newLunch);
+        LunchTO lunchTO = createTOFromLunchWithMeals(newLunch);
 
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -55,7 +55,7 @@ public class LunchRestControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdate() throws Exception {
         Lunch newLunch = getNewLunch();
-        LunchTO lunchTO = createTOFromLunch(newLunch);
+        LunchTO lunchTO = createTOFromLunchWithMeals(newLunch);
 
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -67,7 +67,7 @@ public class LunchRestControllerTest extends AbstractControllerTest {
         String returnedJSON = action.andReturn().getResponse().getContentAsString();
         Lunch returned = JsonUtil.readValue(returnedJSON, Lunch.class);
         returned.setRestaurantName("newRestaurantUpdated");
-        LunchTO updatedLunchTO = createTOFromLunch(returned);
+        LunchTO updatedLunchTO = createTOFromLunchWithMeals(returned);
 
         mockMvc.perform(put(REST_URL + returned.getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -81,7 +81,7 @@ public class LunchRestControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUnacceptableChangeWhenUpdate() throws Exception {
-        LunchTO lunchTO = createTOFromLunch(LUNCH_2);
+        LunchTO lunchTO = createTOFromLunchWithMeals(LUNCH_2);
 
         mockMvc.perform(put(REST_URL + LUNCH_2.getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -96,7 +96,7 @@ public class LunchRestControllerTest extends AbstractControllerTest {
     public void testRepeatedWhenCreate() throws Exception {
         Lunch lunch = getNewLunch();
         lunch.setRestaurantName(LUNCH_3.getRestaurantName());
-        LunchTO lunchTO = createTOFromLunch(lunch);
+        LunchTO lunchTO = createTOFromLunchWithMeals(lunch);
 
         mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -112,7 +112,7 @@ public class LunchRestControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     public void testRepeatedMeals() throws Exception {
-        LunchTO lunchTO = createTOFromLunch(getLunchWithRepeatedMeals());
+        LunchTO lunchTO = createTOFromLunchWithMeals(getLunchWithRepeatedMeals());
 
         mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -129,7 +129,7 @@ public class LunchRestControllerTest extends AbstractControllerTest {
     public void testNotNewWhenCreate() throws Exception {
         Lunch lunch = getNewLunch();
         lunch.setId(getNonexistentLunchId());
-        LunchTO lunchTO = createTOFromLunch(lunch);
+        LunchTO lunchTO = createTOFromLunchWithMeals(lunch);
 
         mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -143,7 +143,7 @@ public class LunchRestControllerTest extends AbstractControllerTest {
 
     @Test
     public void testNotConsistentIdWhenUpdate() throws Exception {
-        LunchTO lunchTO = createTOFromLunch(LUNCH_3);
+        LunchTO lunchTO = createTOFromLunchWithMeals(LUNCH_3);
 
         mockMvc.perform(put(REST_URL + LUNCH_2.getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -264,7 +264,7 @@ public class LunchRestControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].meals[0].id", is(LUNCH_1.getMeals().get(0).getId())))
                 .andExpect(jsonPath("$[0].meals[0].created", is(LUNCH_1.getMeals().get(0).getCreated().toString())))
                 .andExpect(jsonPath("$[0].meals[0].dishName", is(LUNCH_1.getMeals().get(0).getDishName())))
-                .andExpect(jsonPath("$[0].meals[0].price", is(LUNCH_1.getMeals().get(0).getPrice())))
+                .andExpect(jsonPath("$[0].meals[0].price", is(LUNCH_1.getMeals().get(0).getPrice() / 100)))
                 .andExpect(jsonPath("$[0].meals[1].id", is(LUNCH_1.getMeals().get(1).getId())));
     }
 }

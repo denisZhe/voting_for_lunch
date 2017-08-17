@@ -21,13 +21,13 @@ public class LunchTestData {
     public static final Lunch LUNCH_2 = new Lunch(LUNCH1_ID + 1, LocalDate.of(2017, 6, 20), "restaurant2");
     public static final Lunch LUNCH_3 = new Lunch(LUNCH1_ID + 2, LocalDate.now(), "restaurant3");
 
-    private static final Meal MEAL1 = new Meal(MEAL1_ID, LocalDate.of(2017, 6, 19), "dish1", 100, LUNCH_1);
-    private static final Meal MEAL2 = new Meal(MEAL1_ID + 1, LocalDate.of(2017, 6, 19), "dish2", 100, LUNCH_1);
-    private static final Meal MEAL3 = new Meal(MEAL1_ID + 2, LocalDate.of(2017, 6, 20), "dish3", 100, LUNCH_2);
-    private static final Meal MEAL4 = new Meal(MEAL1_ID + 3, LocalDate.of(2017, 6, 20), "dish4", 50, LUNCH_2);
-    private static final Meal MEAL5 = new Meal(MEAL1_ID + 4, LocalDate.of(2017, 6, 20), "dish5", 150, LUNCH_2);
-    private static final Meal MEAL6 = new Meal(MEAL1_ID + 5, LocalDate.now(), "dish6", 155, LUNCH_3);
-    private static final Meal MEAL7 = new Meal(MEAL1_ID + 6, LocalDate.now(), "dish7", 155, LUNCH_3);
+    private static final Meal MEAL1 = new Meal(MEAL1_ID, LocalDate.of(2017, 6, 19), "dish1", 1000, LUNCH_1);
+    private static final Meal MEAL2 = new Meal(MEAL1_ID + 1, LocalDate.of(2017, 6, 19), "dish2", 1000, LUNCH_1);
+    private static final Meal MEAL3 = new Meal(MEAL1_ID + 2, LocalDate.of(2017, 6, 20), "dish3", 1000, LUNCH_2);
+    private static final Meal MEAL4 = new Meal(MEAL1_ID + 3, LocalDate.of(2017, 6, 20), "dish4", 500, LUNCH_2);
+    private static final Meal MEAL5 = new Meal(MEAL1_ID + 4, LocalDate.of(2017, 6, 20), "dish5", 1500, LUNCH_2);
+    private static final Meal MEAL6 = new Meal(MEAL1_ID + 5, LocalDate.now(), "dish6", 1550, LUNCH_3);
+    private static final Meal MEAL7 = new Meal(MEAL1_ID + 6, LocalDate.now(), "dish7", 1550, LUNCH_3);
 
     static {
         LUNCH_1.setMeals(Arrays.asList(MEAL1, MEAL2));

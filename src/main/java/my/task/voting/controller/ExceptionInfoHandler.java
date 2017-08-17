@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
@@ -44,13 +45,14 @@ public class ExceptionInfoHandler {
         return logAndGetValidationErrorInfo(req, e);
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
+    //@ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseBody
-    public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
+    public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e, HttpServletResponse response) {
         String rootCause = ValidationUtil.getRootCause(e).getLocalizedMessage();
         String cause = ValidationUtil.getRootCause(e).getClass().getSimpleName();
         String requestURI = req.getRequestURI();
+        response.setStatus(409);
         if (rootCause.contains("MEALS_UNIQUE_CREATED_LUNCH_DISHNAME_IDX")) {
             return new ErrorInfo(requestURI, cause,
                     "Dishes with the same name are not allowed in one lunch");
@@ -60,6 +62,10 @@ public class ExceptionInfoHandler {
         } else if (rootCause.contains("VOTES_UNIQUE_VOTINGDATE_USER_IDX")) {
             return new ErrorInfo(requestURI, cause,
                     "Only one vote per day for the user is possible");
+        } else if (rootCause.contains("integrity constraint violation: foreign key no parent; SYS_FK_10220 table: VOTES")) {
+            response.setStatus(422);
+            return new ErrorInfo(requestURI, cause,
+                    "Lunch with the specified id does not exist");
         }
         return logAndGetErrorInfo(req, e, true);
     }

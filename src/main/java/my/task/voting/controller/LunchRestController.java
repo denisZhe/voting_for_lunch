@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static my.task.voting.controller.LunchRestController.REST_URL;
-import static my.task.voting.util.LunchUtil.createLunchFromTO;
+import static my.task.voting.util.LunchUtil.*;
 import static my.task.voting.util.ValidationUtil.checkIdConsistent;
 import static my.task.voting.util.ValidationUtil.checkNew;
 
@@ -38,11 +39,11 @@ public class LunchRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Lunch> createWithLocation(@Valid @RequestBody LunchTO lunchTO) {
-        Lunch lunch = createLunchFromTO(lunchTO);
+    public ResponseEntity<LunchTO> createWithLocation(@Valid @RequestBody LunchTO lunchTO) {
+        Lunch lunch = createLunchFromTOWithMeals(lunchTO);
         log.info("create {}", lunch);
         checkNew(lunch);
-        Lunch created = service.save(lunch);
+        LunchTO created = createTOFromLunchWithMeals(service.save(lunch));
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -52,11 +53,12 @@ public class LunchRestController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@Valid @RequestBody LunchTO lunchTO, @PathVariable("id") int id) {
-        Lunch lunch = createLunchFromTO(lunchTO);
+    public ResponseEntity<LunchTO> update(@Valid @RequestBody LunchTO lunchTO, @PathVariable("id") int id) {
+        Lunch lunch = createLunchFromTOWithMeals(lunchTO);
         log.info("update {}", lunch);
         checkIdConsistent(lunch, id);
-        service.save(lunch);
+        LunchTO updated = createTOFromLunchWithMeals(service.save(lunch));
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -66,26 +68,26 @@ public class LunchRestController {
     }
 
     @GetMapping(value = "/{id}")
-    public Lunch get(@PathVariable("id") int id) {
+    public LunchTO get(@PathVariable("id") int id) {
         log.info("get {}", id);
-        return service.get(id);
+        return createTOFromLunch(service.get(id));
     }
 
     @GetMapping
-    public List<Lunch> getAll() {
+    public List<LunchTO> getAll() {
         log.info("get all");
-        return service.getAll();
+        return createListTOFromLunches(service.getAll());
     }
 
     @GetMapping(value = "/by-date")
-    public List<Lunch> getByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public List<LunchTO> getByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get by date {}", date);
-        return service.getByDate(date);
+        return createListTOFromLunches(service.getByDate(date));
     }
 
     @GetMapping(value = "/detailed-by-date")
-    public List<Lunch> getByDateWithMeals(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public List<LunchTO> getByDateWithMeals(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get by date with meals {}", date);
-        return service.getByDateWithMeals(date);
+        return createListTOFromLunchesWithMeals(service.getByDateWithMeals(date));
     }
 }

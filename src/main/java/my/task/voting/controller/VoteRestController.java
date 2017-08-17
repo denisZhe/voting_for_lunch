@@ -6,6 +6,7 @@ import my.task.voting.service.VotingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -51,11 +52,12 @@ public class VoteRestController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@Valid @RequestBody Vote vote, @PathVariable("id") int id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Vote> update(@Valid @RequestBody Vote vote, @PathVariable("id") int id, @AuthenticationPrincipal User user) {
         log.info("update {} with id={} for User {}", vote, id, user);
         checkIdConsistent(vote, id);
         checkUserPermissionForCreateOrUpdateVote(vote, user);
-        service.save(vote);
+        Vote updated = service.save(vote);
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -3,10 +3,13 @@ package my.task.voting.to;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 public class MealTO {
 
     private Integer id;
+
+    private LocalDate created;
 
     @NotBlank
     private String dishName;
@@ -17,12 +20,27 @@ public class MealTO {
     public MealTO() {
     }
 
+    public MealTO(Integer id, LocalDate created, String dishName, Integer price) {
+        this.id = id;
+        this.created = created;
+        this.dishName = dishName;
+        this.price = price;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public LocalDate getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 
     public String getDishName() {
