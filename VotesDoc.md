@@ -4,11 +4,11 @@
 ### GET /voting/rest/votes 
 Returns a list of all votes ordered by date of voting, newer ones at the top.
 
-####Parameters: No parameters
+#### Parameters: No parameters
 
 #### Body: No body
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -30,11 +30,11 @@ curl -s http://localhost:8080/voting/rest/votes --user admin@gmail.com:adminpass
 ### GET /voting/rest/votes/{id}
 Returns a single vote by id
 
-####Parameters: id - integer 
+#### Parameters: id - integer 
 
 #### Body: No body
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -71,11 +71,11 @@ curl -s http://localhost:8080/voting/rest/lunches/123 --user admin@gmail.com:adm
 ### GET /voting/rest/votes/by-user
 Returns a list of votes by user id
 
-####Parameters: user - id of the user, integer
+#### Parameters: user - id of the user, integer
 
 #### Body: No body
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -115,11 +115,11 @@ curl -s http://localhost:8080/voting/rest/votes/by-user?user=abcdef --user admin
 ## GET /voting/rest/votes/by-lunch
 Returns a list of votes by lunch id
 
-####Parameters: lunch - id of the lunch, integer
+#### Parameters: lunch - id of the lunch, integer
 
 #### Body: No body
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -142,7 +142,7 @@ curl -s http://localhost:8080/voting/rest/votes/by-lunch?lunch=100004 --user adm
 ## POST /voting/rest/votes
 Creates a new vote and returns it.  The date of creation of vote is set equal to the current date.
 
-####Parameters: No parameters
+#### Parameters: No parameters
 
 #### Body: vote object that needs to be created
 
@@ -154,7 +154,7 @@ Example Value:
 }
 ```
 
-####Responses:
+#### Responses:
 **Code: 201** (Created)
 
 Example Value:
@@ -258,7 +258,7 @@ curl -s -X POST http://localhost:8080/voting/rest/votes/123 --user admin@gmail.c
 ## PUT /voting/rest/votes/{id}
 Updates the vote and returns it if current time is before deadline (11:00)
 
-####Parameters: id - integer
+#### Parameters: id - integer
 
 #### Body: vote object that needs to be updated
 
@@ -271,7 +271,7 @@ Example Value:
 }
 ```
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -341,6 +341,6 @@ for windows:
 curl -s -X PUT -d "{\"id\": 100015, \"userId\": 100002, \"lunchId\": 100005}" -H "Content-Type:application/json;charset=UTF-8" http://localhost:8080/voting/rest/votes/100015 --user user@gmail.com:password
 ```
 
-###General responses:
+### General responses:
 - Code: 401 Unauthorized
 - Code: 403 Forbidden - returns if authorized user is not admin

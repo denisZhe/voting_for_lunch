@@ -4,11 +4,11 @@
 ### GET /voting/rest/lunches 
 Returns a list of all lunches ordered by date of creating lunches, newer ones at the top.
 
-####Parameters: No parameters
+#### Parameters: No parameters
 
 #### Body: No body
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -29,11 +29,11 @@ curl -s http://localhost:8080/voting/rest/lunches --user admin@gmail.com:adminpa
 ### GET /voting/rest/lunches/{id}
 Returns a single lunch by id
 
-####Parameters: id - integer 
+#### Parameters: id - integer 
 
 #### Body: No body
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -69,11 +69,11 @@ curl -s http://localhost:8080/voting/rest/lunches/123 --user admin@gmail.com:adm
 ### GET /voting/rest/lunches/by-date
 Returns a list of lunches by date of creating
 
-####Parameters: date - date of creating, formatted like yyyy-mm-dd
+#### Parameters: date - date of creating, formatted like yyyy-mm-dd
 
 #### Body: No body
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -112,11 +112,11 @@ curl -s http://localhost:8080/voting/rest/lunches/by-date?date=abcdef --user adm
 ## GET /voting/rest/lunches/detailed-by-date
 Returns a list of lunches with meals by date of creating
 
-####Parameters: date - date of creating, formatted like yyyy-mm-dd
+#### Parameters: date - date of creating, formatted like yyyy-mm-dd
 
 #### Body: No body
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -148,7 +148,7 @@ curl -s http://localhost:8080/voting/rest/lunches/detailed-by-date?date=2017-06-
 ## POST /voting/rest/lunches
 Creates a new lunch with enclosed meal and returns it. The date of creation of lunch and enclosed meal is set equal to the current date.
 
-####Parameters: No parameters
+#### Parameters: No parameters
 
 #### Body: lunch object that needs to be created
 
@@ -169,7 +169,7 @@ Example Value:
 }
 ```
 
-####Responses:
+#### Responses:
 **Code: 201** (Created)
 
 Example Value:
@@ -276,7 +276,7 @@ curl -s -X POST -d "{\"id\": 100004, \"restaurantName\": \"restaurant_test_2\", 
 ## PUT /voting/rest/lunches/{id}
 Updates the lunch and/or enclosed meals and returns it. Or creates new lunch and enclosed meal if lunch with specified id does not exists
 
-####Parameters: id - integer
+#### Parameters: id - integer
 
 #### Body: lunch object with meals that needs to be updated
 
@@ -295,7 +295,7 @@ Example Value:
 }
 ```
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 Example Value:
@@ -353,11 +353,11 @@ curl -s -X PUT -d "{\"id\": 100055, \"created\": \"2017-08-14\", \"restaurantNam
 ### DELETE /voting/rest/lunches/{id}
 Deletes a single lunch by id
 
-####Parameters: id - integer 
+#### Parameters: id - integer 
 
 #### Body: No body
 
-####Responses:
+#### Responses:
 **Code: 200** (OK)
 
 ```
@@ -390,6 +390,6 @@ Returns if id not specified in url
 curl -s -X DELETE http://localhost:8080/voting/rest/lunches --user admin@gmail.com:adminpass
 ```
 
-###General responses:
+### General responses:
 - Code: 401 Unauthorized
 - Code: 403 Forbidden - returns if authorized user is not admin
